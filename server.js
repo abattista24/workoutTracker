@@ -8,11 +8,12 @@
     //name, type, weight, sets, reps and duration
     //if cardio ---- add distance
 
-//view stats
+
 
 
 const { WSAENOPROTOOPT } = require("constants");
 const express = require("express");
+const { get } = require("http");
 const router =require("express").Router();
 const mongojs = require("mongojs");
 const mongoose = require("mongoose")
@@ -32,7 +33,7 @@ const databaseUrl = "fitnessTracker";
 const collections = ["myWorkouts"];
 
 const db = mongojs(databaseUrl, collections);
-const workout = require("../models/workout.js");
+// const workout = require("../models/workout.js");
 
 
 db.on("error", error => {
@@ -41,9 +42,14 @@ db.on("error", error => {
 
 //-------------ROUTES--------------
 
+//-------HTML----------
+router.get("/exercise", (req, res) => {
+    res.sendFile(path.join (_dirname, "/public/excercise.html"));
+});
 
-
-
+router.get("/stats", (req,res) => {
+    res.sendFile(path.join(_dirname, "/public/stats.html"));
+});
 
 
 // ------API ROUTES -----------
@@ -97,7 +103,7 @@ router.put("/api/workout/:id", (req, res) =>{
 
 
 //delete workout
-routerr.delete("/api/workouts", (req, res) =>{
+router.delete("/api/workouts", (req, res) =>{
     workout.findByIdAndDelet(req.body.id)
     .then(() => {
         res.json(true);
