@@ -11,10 +11,9 @@
 
 
 
-const { WSAENOPROTOOPT } = require("constants");
+// const { constants} = require("constants");
 const express = require("express");
 const { get } = require("http");
-const router =require("express").Router();
 const mongojs = require("mongojs");
 const mongoose = require("mongoose")
 const logger = require("morgan");
@@ -30,94 +29,19 @@ app.use(express.json());
 app.use(express.static("public"));
 
 const databaseUrl = "fitnessTracker";
-const collections = ["myWorkouts"];
+const collections = ["workout"];
 
 const db = mongojs(databaseUrl, collections);
-// const workout = require("../models/workout.js");
+
 
 
 db.on("error", error => {
   console.log("Database Error:", error);
 });
 
-//-------------ROUTES--------------
 
-//-------HTML----------
-router.get("/exercise", (req, res) => {
-    res.sendFile(path.join (_dirname, "/public/excercise.html"));
-});
-
-router.get("/stats", (req,res) => {
-    res.sendFile(path.join(_dirname, "/public/stats.html"));
-});
-
-
-// ------API ROUTES -----------
-// look at last workout
-router.get("/api/workouts", (req,res) => {
-    workout.find({})
-    .then(db => {
-        res.json(db);
-    })
-    .if(err => {
-        res.send(err);
-    });
-});
-
-//for stats
-router.get("api/workouts/range", (req, res) => {
-    workout.find({}).limit(5)
-    .then(db => {
-        res.json;
-    })
-    .if(err => {
-        res.send(err);
-    });
-});
-
-
-//create new workout
-router.post("/api/workouts", (req, res) => {
-    var newWorkout = req.body
-    workout.create({})
-    .then(db => {
-        res.json(db)
-    })
-    .if(err =>
-        res.send(err))
-})
-
-
-//new excercise
-router.put("/api/workout/:id", (req, res) =>{
-    workout.findByIdAndUpdate(req.params.id, 
-        {$push: {exercises:req.body}},
-        {new:true, runValidators: true})
-    .then(db =>{
-        res,json(db);
-    })
-    .if(err => {
-        res.send(err);
-    });
-});
-
-
-//delete workout
-router.delete("/api/workouts", (req, res) =>{
-    workout.findByIdAndDelet(req.body.id)
-    .then(() => {
-        res.json(true);
-    })
-    .if(err => {
-        res.send(err);
-    });
-});
-
-
-
-//--------Mongo db functions--------
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname + "./public/index.html"));
+  res.json(path.join(__dirname + "./public/index.html"));
 });
 
 app.post("/submit", (req, res) => {
@@ -205,6 +129,9 @@ app.delete("/clearall", (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("App running on port 3000!");
+var PORT = process.eventNames.PORT 
+|| 3000;
+
+app.listen(PORT, () => {
+  console.log("App running on port" +PORT+ "!");
 });
